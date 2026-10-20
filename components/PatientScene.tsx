@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element -- local kiosk asset */
 "use client";
 
-import { useId } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { TONE_LABEL, toneColor, type Tone } from "@/lib/visualStage";
 import { ECGTrace } from "./ECGTrace";
 
@@ -11,6 +11,32 @@ const SCENE = { src: "/images/patient-scene.webp", width: 1024, height: 1536 } a
 const RECOVERED = { src: "/images/patient-recovered.webp", focus: "60% 30%" } as const;
 /** The monitor screen inside the illustration, in image pixels. */
 const SCREEN = { x: 728, y: 246, width: 250, height: 223 } as const;
+/** The part of the illustration that must stay visible: the patient's whole face and the monitor. */
+const FOCUS = { x: 140, y: 225, width: 870, height: 565 } as const;
+const DEFAULT_VIEWBOX = "120 150 880 1080";
+
+/** Frames FOCUS for a panel of the given aspect ratio, filling the rest with the surrounding illustration. */
+function viewBoxFor(aspect: number) {
+  let width: number;
+  let height: number;
+  if (aspect >= FOCUS.width / FOCUS.height) {
+    height = FOCUS.height;
+    width = Math.min(height * aspect, SCENE.width);
+    height = width / aspect;
+  } else {
+    width = FOCUS.width;
+    height = Math.min(width / aspect, SCENE.height);
+    width = height * aspect;
+  }
+  const clamp = (v: number, max: number) => Math.max(0, Math.min(v, max));
+  const x = clamp(FOCUS.x + FOCUS.width / 2 - width / 2, SCENE.width - width);
+  // Wide panels centre on the face and monitor; tall ones keep a little headroom above the monitor.
+  const y = clamp(
+    height <= FOCUS.height ? FOCUS.y + FOCUS.height / 2 - height / 2 : FOCUS.y - (height - FOCUS.height) * 0.25,
+    SCENE.height - height,
+  );
+  return `${x} ${y} ${width} ${height}`;
+}
 
 /**
  * Patient scene: the supplied illustration, framed on the patient and the bedside monitor. The
@@ -22,14 +48,26 @@ export function PatientScene({ tone, className = "" }: { tone: Tone; className?:
   const uid = useId().replace(/[^a-zA-Z0-9]/g, "");
   const color = toneColor(tone);
   const colorTransition = { transition: "fill 1.4s ease, stroke 1.4s ease" };
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [viewBox, setViewBox] = useState(DEFAULT_VIEWBOX);
+
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      if (width > 0 && height > 0) setViewBox(viewBoxFor(width / height));
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className={`relative overflow-hidden rounded-[1.6rem] ${className}`}>
+    <div ref={frameRef} className={`relative overflow-hidden rounded-[1.6rem] ${className}`}>
       <svg
-        // Frame from the patient's face to the monitor (x 120-1000). Tall cards show all of that width;
-        // wide panels keep the full width and crop from the bottom.
-        viewBox="120 150 880 1080"
-        preserveAspectRatio="xMidYMin slice"
+        // The viewBox follows the panel's shape so the patient's face and the monitor are always in frame.
+        viewBox={viewBox}
+        preserveAspectRatio="xMidYMid slice"
         className="block h-full w-full"
         role="img"
         aria-label={
