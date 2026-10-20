@@ -49,6 +49,10 @@ export function PuzzleBoard({ unlocked, assembled = false, staggerIn = false, fr
         ))}
       </defs>
 
+      {/* The full artwork sits under the gold covers, so an unlocked piece always shows its fragment even
+          when the browser skips repainting the clipped copy below (mobile Safari, cached image on replay). */}
+      {!staggerIn && <PuzzleArtwork />}
+
       {pieces.map((p) => {
         if (!unlocked.includes(p.index)) return null;
         const order = unlocked.indexOf(p.index);
