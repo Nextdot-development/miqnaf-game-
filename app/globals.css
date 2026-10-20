@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+/*
+ * Supplied fonts, converted to WOFF2 by scripts/build-web-fonts.py. These are the only fonts the UI
+ * uses; font-display: block waits for them rather than flashing a system font.
+ * Browsers only read the first face of a .ttc file, so each Helvetica Neue
+ * weight used by the UI is served as its own file.
+ */
+@font-face {
+  font-family: "Acumin Variable Concept";
+  src: url("/fonts/web/AcuminVariableConcept.woff2") format("woff2");
+  font-weight: 100 900;
+  font-stretch: 50% 115%;
+  font-display: block;
+}
+@font-face {
+  font-family: "Helvetica Neue Kiosk";
+  src: url("/fonts/web/HelveticaNeue-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: "Helvetica Neue Kiosk";
+  src: url("/fonts/web/HelveticaNeue-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: block;
+}
+@font-face {
+  font-family: "Helvetica Neue Kiosk";
+  src: url("/fonts/web/HelveticaNeue-Bold.woff2") format("woff2");
+  font-weight: 600 900;
+  font-display: block;
+}
+@font-face {
+  font-family: "Helvetica Neue Kiosk";
+  src: url("/fonts/web/HelveticaNeue-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: block;
+}
+
+/* Two-column kiosk layout on landscape screens 1024px and wider; stacked otherwise. */
+@custom-variant wide (@media (min-width: 64rem) and (min-aspect-ratio: 4/3));
+
+/*
+ * Palette on a white page: crimson (accent text, alerts), royal navy (header, option
+ * bars, logo, body text) and golden yellow (primary CTAs, A-D badges, jigsaw pieces).
+ * Tints are opacity of these colours; no other hues and no gradients.
+ */
+@theme {
+  --color-navy: #28397F; /* header bar, option bars, MIQNAF logo */
+  --color-red: #9A1F24; /* accent text, alert highlights */
+  --color-gold: #E7A900; /* primary CTAs, A-D option badges, jigsaw pieces */
+  --color-green: #15803D; /* correct-answer highlight (white text passes contrast) */
+  --color-paper: #f7f7f7; /* logo background */
+  --color-ink: #000000; /* logo product line */
+
+  /* Type scale for the 42" kiosk (px at 1920x1080, where 1rem = 16px). */
+  --text-hero: 7rem; /* 112px: start-screen headline */
+  --text-title: 5rem; /* 80px: screen titles */
+  --text-popup: 3.5rem; /* 56px: popup titles */
+  --text-lead: 2rem; /* 32px: lead line under the hero */
+  --text-body: 1.75rem; /* 28px: paragraphs and descriptions */
+  --text-label: 1.5rem; /* 24px: kickers, notes, captions (smallest readable text) */
+  --text-tag: 1.25rem; /* 20px: small badges */
+
+  /* Supplied fonts only (public/fonts); no system fallbacks. */
+  --font-display: "Acumin Variable Concept";
+  --font-body: "Helvetica Neue Kiosk";
+  /* Tailwind's own defaults (the html element, sans and mono utilities) also use the supplied fonts. */
+  --default-font-family: "Helvetica Neue Kiosk";
+  --default-mono-font-family: "Helvetica Neue Kiosk";
+  --font-sans: "Helvetica Neue Kiosk";
+  --font-mono: "Helvetica Neue Kiosk";
+}
+
+/*
+ * Fluid scale. On the kiosk layout 1rem tracks the viewport so the composition
+ * designed at 1920x1080 (1rem = 16px) fits any landscape screen without scrolling.
+ * On stacked layouts the scale is clamped and the page scrolls.
+ */
+html {
+  font-size: clamp(9px, 2.2vw, 13px);
+}
+@media (min-width: 64rem) and (min-aspect-ratio: 4/3) {
+  html {
+    font-size: min(0.8333vw, 1.4815vh);
+  }
+}
+
+/* Page background: white. Solid colours only, no gradients. */
+html {
+  background: #ffffff;
+}
+
+html,
+body {
+  margin: 0;
+  color: var(--color-navy);
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-stretch: 78%;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+/* In the base layer so a component's own focus styling (e.g. the name field) can override it. */
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--color-red);
+    outline-offset: 3px;
+  }
+}
+
+/* ECG trace: the path repeats every beat, so scrolling by one beat loops seamlessly. */
+@keyframes ecg-scroll {
+  to {
+    transform: translateX(calc(-1px * var(--ecg-period)));
+  }
+}
+
+.ecg-scroll {
+  animation: ecg-scroll var(--ecg-duration) linear infinite;
+  will-change: transform;
+}
+
+/* Monitor alarm light: blinks while the patient is critical. */
+@keyframes alarm-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.alarm-blink {
+  animation: alarm-blink 1s steps(2, jump-none) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ecg-scroll {
+    animation-duration: calc(var(--ecg-duration) * 3);
+  }
+  .alarm-blink {
+    animation: none;
+  }
+}
