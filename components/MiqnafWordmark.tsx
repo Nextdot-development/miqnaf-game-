@@ -19,7 +19,7 @@ export function MiqnafWordmark({ height = 4 }: { height?: number }) {
   if (MIQNAF.logoSrc) {
     return (
       <span className="inline-flex shrink-0 rounded-xl bg-paper px-[0.4em] py-[0.25em]" style={{ fontSize: `${height}rem` }}>
-        <img src={MIQNAF.logoSrc} alt="MIQNAF (Nafithromycin 800mg)" style={{ height: "1em" }} className="w-auto" />
+        <img src={MIQNAF.logoSrc} alt="MIQNAF (Nafithromycin tablet 400 mg)" style={{ height: "1em" }} className="w-auto" />
       </span>
     );
   }
