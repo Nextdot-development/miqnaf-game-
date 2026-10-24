@@ -75,7 +75,7 @@ export function GameShell() {
   const now = useNow(timerRunning);
   const showTimer = state.screen === "question" || state.screen === "recovery";
 
-  const { tone } = visualStageFor(state.screen, state.unlockedPieces.length, recoveryRevealed);
+  const { tone } = visualStageFor(state.screen, state.unlockedPieces.length);
   const sceneHeight = SCENE_HEIGHT[state.screen];
 
   return (

@@ -1,4 +1,5 @@
 import { MONITOR_COLORS } from "@/data/brand";
+import { PUZZLE_PIECE_COUNT } from "@/data/cases";
 import type { GameScreen } from "@/types/game";
 
 /** Narrative tone of the scene. Drives monitor colour, lighting and atmosphere. */
@@ -19,7 +20,6 @@ export interface VisualStage {
 export function visualStageFor(
   screen: GameScreen,
   unlockedCount: number,
-  recoveryRevealed: boolean,
 ): VisualStage {
   switch (screen) {
     case "attract":
@@ -28,9 +28,11 @@ export function visualStageFor(
       return { tone: "critical", mood: 0 };
     case "question":
       if (unlockedCount === 0) return { tone: "critical", mood: 0 };
+      // The last correct answer stabilises the patient straight away.
+      if (unlockedCount >= PUZZLE_PIECE_COUNT) return { tone: "stable", mood: 5 };
       return { tone: "recovering", mood: Math.min(unlockedCount, 4) as Mood };
     case "recovery":
-      return recoveryRevealed ? { tone: "stable", mood: 5 } : { tone: "recovering", mood: 4 };
+      return { tone: "stable", mood: 5 };
     default:
       return { tone: "stable", mood: 5 };
   }
