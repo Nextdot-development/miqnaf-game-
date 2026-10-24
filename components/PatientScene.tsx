@@ -20,6 +20,8 @@ interface SceneArt {
   height: number;
   /** The monitor screen inside the illustration. */
   screen: Rect;
+  /** For artwork without a monitor of its own (a photo): draw a wall-mounted monitor body around the screen. */
+  bezel?: Rect;
   /** Live ECG band and heart position, relative to the screen's top-left corner. */
   ecg: { top: number; height: number };
   heart: { x: number; y: number };
@@ -45,17 +47,17 @@ const WARD: SceneArt = {
   label: { critical: "patient in an ICU bed", stable: "patient stabilised, awake and comfortable in an ICU bed" },
 };
 
-/** OPD: close-up of a coughing patient with his doctor in a blue-lit clinic (1500x1000 units, exported at 2x). */
+/** OPD: the supplied clinic photo (489x287, upscaled 3x), with a wall-mounted monitor drawn in the gap above it. */
 const CLINIC: SceneArt = {
-  src: "/images/clinic-scene.webp",
-  width: 1500,
-  height: 1000,
-  screen: { x: 1060, y: 120, width: 280, height: 210 },
-  ecg: { top: 64, height: 112 },
-  heart: { x: 238, y: 32 },
-  focus: { x: 360, y: 90, width: 1020, height: 600 },
-  recoveredSrc: "/images/clinic-recovered.webp",
-  label: { critical: "patient coughing into his fist while his doctor looks on in a clinic", stable: "patient recovered and smiling at his clinic follow-up" },
+  src: "/images/clinic-photo.webp",
+  width: 1467,
+  height: 861,
+  bezel: { x: 640, y: 28, width: 300, height: 244 },
+  screen: { x: 654, y: 42, width: 272, height: 192 },
+  ecg: { top: 58, height: 98 },
+  heart: { x: 236, y: 26 },
+  focus: { x: 330, y: 0, width: 930, height: 620 },
+  label: { critical: "patient coughing into his fist while his doctor reviews his notes in a clinic", stable: "patient stabilised at his clinic visit" },
 };
 
 /** Frames the scene's focus area for a panel of the given aspect ratio, filling the rest with the surrounding illustration. */
@@ -144,6 +146,16 @@ function IllustratedScene({ art, tone, className }: { art: SceneArt; tone: Tone;
             preserveAspectRatio="none"
             style={{ opacity: stable ? 1 : 0, transition: "opacity 1s ease-out" }}
           />
+        )}
+
+        {art.bezel && (
+          <g>
+            <rect x={art.bezel.x + art.bezel.width / 2 - 14} y={0} width={28} height={art.bezel.y + 10} fill="#9aa7b8" />
+            <rect {...art.bezel} rx={18} fill="#dde4ee" stroke="#aab6c6" strokeWidth={3} style={{ filter: "drop-shadow(0 6px 10px rgb(0 0 0 / 0.35))" }} />
+            <circle cx={art.bezel.x + art.bezel.width - 24} cy={art.bezel.y + art.bezel.height - 19} r={5} fill="#3fbf8a" />
+            <circle cx={art.bezel.x + art.bezel.width - 42} cy={art.bezel.y + art.bezel.height - 19} r={5} fill="#3fbf8a" />
+            <rect x={art.bezel.x + 16} y={art.bezel.y + art.bezel.height - 23} width={80} height={8} rx={4} fill="#9aa7b8" />
+          </g>
         )}
 
         {/* Live monitor screen */}
