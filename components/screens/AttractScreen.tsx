@@ -56,9 +56,9 @@ export function AttractScreen() {
           transition={{ type: "spring", stiffness: 160, damping: 16 }}
           className="font-display text-[4.75rem] font-extrabold uppercase leading-[0.92] wide:text-hero"
         >
-          Can you save
+          This patient
           <br />
-          <span className="text-red">this patient?</span>
+          <span className="text-red">needs your help</span>
         </motion.h1>
         <p className="mt-6 text-[2rem] text-navy/70 wide:text-lead">{COPY.attract.subheadline}</p>
       </div>
@@ -88,7 +88,7 @@ export function AttractScreen() {
                 ].join(" ")}
               >
                 <Icon size="3rem" strokeWidth={2} className="shrink-0" aria-hidden />
-                <span className="flex min-w-0 flex-col">
+                <span className="flex min-w-0 flex-col pr-6">
                   <span className="font-display text-[2.6rem] font-bold leading-none">{label}</span>
                   <span className="mt-2 text-label opacity-70">{hint}</span>
                 </span>

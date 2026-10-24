@@ -6,8 +6,8 @@ export const COPY = {
   header: "SAVE THE PATIENT", // spec title; the MIQNAF logo replaces the event name
   attract: {
     kicker: "SAVE THE PATIENT",
-    headline: "CAN YOU SAVE THIS PATIENT?", // spec
-    subheadline: "Every second counts. Every decision matters.", // spec
+    headline: "THIS PATIENT NEEDS YOUR HELP", // client revision
+    subheadline: "Every Minute Counts. Every Decision Matters.", // client revision
     choosePrompt: "Choose your case",
     opd: { label: "1. OPD CASE", hint: "Outpatient department" }, // label: spec
     ipd: { label: "2. IPD CASE", hint: "Inpatient department" }, // label: spec
@@ -79,6 +79,7 @@ export const COPY = {
     empty: "No times recorded yet. Be the first doctor to save the patient!",
     error: "The leaderboard could not be loaded.",
     demoBadge: "Demo leaderboard. Scores are saved on this device only.",
+    disclaimer: "For a Medical Specialist (Pulmonologist) Only.", // client revision
   },
 } as const;
 
