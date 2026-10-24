@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import { preload } from "react-dom";
 import { useGame } from "@/hooks/useGame";
 import { TONE_LABEL, toneColor, type Tone } from "@/lib/visualStage";
 import { ECGTrace } from "./ECGTrace";
@@ -92,6 +93,10 @@ function viewBoxFor(art: SceneArt, aspect: number) {
  */
 export function PatientScene({ tone, className = "" }: { tone: Tone; className?: string }) {
   const { state } = useGame();
+  // Start loading both settings' artwork straight away, so switching case shows the image at once.
+  for (const scene of [WARD, CLINIC]) {
+    for (const src of [scene.src, scene.recoveredSrc, scene.recoveredCover?.src]) if (src) preload(src, { as: "image" });
+  }
   const art = state.pathway === "OPD" ? CLINIC : WARD;
   // Remount on a change of setting so the framing is recomputed for the new artwork.
   return <IllustratedScene key={art.src} art={art} tone={tone} className={className} />;
@@ -105,6 +110,23 @@ function IllustratedScene({ art, tone, className }: { art: SceneArt; tone: Tone;
   const [viewBox, setViewBox] = useState(() => viewBoxFor(art, 1.6));
   const { screen } = art;
   const stable = tone === "stable";
+  // The scene (monitor included) stays hidden until its artwork has loaded, so the monitor never shows on its own.
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    const img = new Image();
+    img.src = art.src;
+    img
+      .decode()
+      .catch(() => undefined)
+      .finally(() => {
+        if (alive) setReady(true);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [art.src]);
 
   useEffect(() => {
     const el = frameRef.current;
@@ -118,8 +140,9 @@ function IllustratedScene({ art, tone, className }: { art: SceneArt; tone: Tone;
   }, [art]);
 
   return (
-    <div ref={frameRef} className={`relative overflow-hidden rounded-[1.6rem] ${className}`}>
+    <div ref={frameRef} className={`relative overflow-hidden rounded-[1.6rem] bg-[#dfe8f3] ${className}`}>
       <svg
+        style={{ opacity: ready ? 1 : 0, transition: "opacity 0.4s ease-out" }}
         // The viewBox follows the panel's shape so the faces and the monitor are always in frame.
         viewBox={viewBox}
         preserveAspectRatio="xMidYMid slice"
