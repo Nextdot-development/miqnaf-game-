@@ -58,7 +58,8 @@ const CLINIC: SceneArt = {
   ecg: { top: 58, height: 98 },
   heart: { x: 236, y: 26 },
   focus: { x: 400, y: 0, width: 1080, height: 640 },
-  label: { critical: "patient coughing with a hand on his chest while his doctor takes notes in a clinic", stable: "patient stabilised at his clinic visit" },
+  recoveredSrc: "/images/clinic-photo-recovered.webp",
+  label: { critical: "patient coughing with a hand on his chest while his doctor takes notes in a clinic", stable: "patient recovered, smiling and giving a thumbs up to his doctor" },
 };
 
 /** Frames the scene's focus area for a panel of the given aspect ratio, filling the rest with the surrounding illustration. */
