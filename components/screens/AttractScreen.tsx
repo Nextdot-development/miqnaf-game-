@@ -88,12 +88,12 @@ export function AttractScreen() {
                 ].join(" ")}
               >
                 <Icon size="3rem" strokeWidth={2} className="shrink-0" aria-hidden />
-                <span className="flex min-w-0 flex-col pr-6">
+                <span className="flex min-w-0 flex-col wide:pr-6">
                   <span className="font-display text-[2.6rem] font-bold leading-none">{label}</span>
                   <span className="mt-2 text-label opacity-70">{hint}</span>
                 </span>
                 {selected && (
-                  <span className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-gold text-navy" aria-hidden>
+                  <span className="absolute -right-2.5 -top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-gold text-navy ring-2 ring-white wide:right-4 wide:top-4 wide:ring-0" aria-hidden>
                     <Check size="1.25rem" strokeWidth={3.5} />
                   </span>
                 )}
