@@ -47,17 +47,17 @@ const WARD: SceneArt = {
   label: { critical: "patient in an ICU bed", stable: "patient stabilised, awake and comfortable in an ICU bed" },
 };
 
-/** OPD: the supplied clinic photo (489x287, upscaled 3x), with a wall-mounted monitor drawn in the gap above it. */
+/** OPD: clinic consultation photo (1672x940), with a wall-mounted monitor drawn over the wall between the two heads. */
 const CLINIC: SceneArt = {
   src: "/images/clinic-photo.webp",
-  width: 1467,
-  height: 861,
-  bezel: { x: 640, y: 28, width: 300, height: 244 },
-  screen: { x: 654, y: 42, width: 272, height: 192 },
+  width: 1672,
+  height: 940,
+  bezel: { x: 760, y: 36, width: 300, height: 244 },
+  screen: { x: 774, y: 50, width: 272, height: 192 },
   ecg: { top: 58, height: 98 },
   heart: { x: 236, y: 26 },
-  focus: { x: 330, y: 0, width: 930, height: 620 },
-  label: { critical: "patient coughing into his fist while his doctor reviews his notes in a clinic", stable: "patient stabilised at his clinic visit" },
+  focus: { x: 400, y: 0, width: 1080, height: 640 },
+  label: { critical: "patient coughing with a hand on his chest while his doctor takes notes in a clinic", stable: "patient stabilised at his clinic visit" },
 };
 
 /** Frames the scene's focus area for a panel of the given aspect ratio, filling the rest with the surrounding illustration. */
