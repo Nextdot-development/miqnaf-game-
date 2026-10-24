@@ -45,17 +45,17 @@ const WARD: SceneArt = {
   label: { critical: "patient in an ICU bed", stable: "patient stabilised, awake and comfortable in an ICU bed" },
 };
 
-/** OPD: a coughing patient and his doctor in an outpatient clinic (1500x1000 units, exported at 2x). */
+/** OPD: close-up of a coughing patient with his doctor in a blue-lit clinic (1500x1000 units, exported at 2x). */
 const CLINIC: SceneArt = {
   src: "/images/clinic-scene.webp",
   width: 1500,
   height: 1000,
-  screen: { x: 860, y: 166, width: 250, height: 200 },
-  ecg: { top: 58, height: 108 },
-  heart: { x: 210, y: 28 },
-  focus: { x: 440, y: 130, width: 990, height: 600 },
+  screen: { x: 1060, y: 120, width: 280, height: 210 },
+  ecg: { top: 64, height: 112 },
+  heart: { x: 238, y: 32 },
+  focus: { x: 360, y: 90, width: 1020, height: 600 },
   recoveredSrc: "/images/clinic-recovered.webp",
-  label: { critical: "patient coughing during an outpatient clinic visit", stable: "patient recovered and smiling at his clinic follow-up" },
+  label: { critical: "patient coughing into his fist while his doctor looks on in a clinic", stable: "patient recovered and smiling at his clinic follow-up" },
 };
 
 /** Frames the scene's focus area for a panel of the given aspect ratio, filling the rest with the surrounding illustration. */
